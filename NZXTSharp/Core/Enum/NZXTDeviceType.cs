@@ -72,7 +72,8 @@ namespace NZXTSharp
         KrakenX52 = 9,
         KrakenX62 = 10,
         KrakenX72 = 11,
-        #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+        KrakenX63 = 25,
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 
         // Hues

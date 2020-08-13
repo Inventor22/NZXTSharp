@@ -27,7 +27,7 @@ using NZXTSharp;
 using NZXTSharp.COM;
 using NZXTSharp.Exceptions;
 
-using HidLibrary;
+//using HidLibrary;
 
 namespace NZXTSharp.KrakenX
 {
@@ -100,7 +100,7 @@ namespace NZXTSharp.KrakenX
         /// <summary>
         /// The <see cref="NZXTDeviceType"/> of the <see cref="KrakenX"/> device. Will always be <see cref="NZXTDeviceType.KrakenX"/>.
         /// </summary>
-        public NZXTDeviceType Type { get => NZXTDeviceType.KrakenX; }
+        public NZXTDeviceType Type { get => NZXTDeviceType.KrakenX63; }
 
         /// <inheritdoc/>
         public int ID { get => 0x170e; }
@@ -230,7 +230,7 @@ namespace NZXTSharp.KrakenX
             if (CommandQueue == null)
                 throw new NullReferenceException("CommandQueue for ApplyEffect returned null.");
             
-            foreach (byte[] Command in CommandQueue) 
+            foreach (byte[] Command in CommandQueue)
             {
                 if (Command.Length <= 0x41)
                 {
@@ -250,15 +250,16 @@ namespace NZXTSharp.KrakenX
         /// <returns>The last reported pump speed in RPM.</returns>
         public int GetPumpSpeed()
         {
-            if (_COMController.LastReport != null)
-            {
-                HidReport report = _COMController.LastReport;
-                return report.Data[4] << 8 | report.Data[5];
-            }
-            else
-            {
-                return 0;
-            }
+            //if (_COMController.LastReport != null)
+            //{
+            //    HidReport report = _COMController.LastReport;
+            //    return report.Data[4] << 8 | report.Data[5];
+            //}
+            //else
+            //{
+            //    return 0;
+            //}
+            return 0;
         }
 
         /// <summary>
@@ -292,15 +293,16 @@ namespace NZXTSharp.KrakenX
         /// <returns>The last reported fan speed in RPM.</returns>
         public int GetFanSpeed()
         {
-            if (_COMController.LastReport != null)
-            {
-                HidReport report = _COMController.LastReport;
-                return report.Data[4] * 0x100 + report.Data[5];
-            }
-            else
-            {
-                return 0;
-            }
+            //if (_COMController.LastReport != null)
+            //{
+            //    HidReport report = _COMController.LastReport;
+            //    return report.Data[4] * 0x100 + report.Data[5];
+            //}
+            //else
+            //{
+            //    return 0;
+            //}
+            return 0;
         }
 
         /// <summary>
@@ -330,25 +332,26 @@ namespace NZXTSharp.KrakenX
         /// <returns>The last reported liquid temp as a rounded integer, in degrees C.</returns>
         public int? GetLiquidTemp(bool AsFarenheit = false)
         {
-            if (_COMController.LastReport != null)
-            {
-                HidReport report = _COMController.LastReport;
-                double temp = (report.Data[0] + (report.Data[1] * 0.1));
-                return AsFarenheit ? temp.Round().DegreesCtoF() : temp.Round();
-            } else
-            {
-                return 0;
-            }
+            return 0;
+            //if (_COMController.LastReport != null)
+            //{
+            //    HidReport report = _COMController.LastReport;
+            //    double temp = (report.Data[0] + (report.Data[1] * 0.1));
+            //    return AsFarenheit ? temp.Round().DegreesCtoF() : temp.Round();
+            //} else
+            //{
+            //    return 0;
+            //}
         }
 
         /// <summary>
         /// Gets the last HID report received from the KrakenX device.
         /// </summary>
         /// <returns>An <see cref="HidReport"/>.</returns>
-        public HidReport GetLastReport()
-        {
-            return _COMController.LastReport;
-        }
+        //public HidReport GetLastReport()
+        //{
+        //    return _COMController.LastReport;
+        //}
         
         /// <summary>
         /// Gets the <see cref="KrakenX"/>'s firmware version.
@@ -356,15 +359,16 @@ namespace NZXTSharp.KrakenX
         /// <returns>A <see cref="System.Version"/> object.</returns>
         public Version GetFirmwareVersion()
         {
-            while (_COMController.LastReport == null)
-            {
-                Thread.Sleep(25);
-            }
+            //while (_COMController.LastReport == null)
+            //{
+            //    Thread.Sleep(25);
+            //}
 
-            HidReport report = _COMController.LastReport;
-            int Major = report.Data[10];
-            int Minor = report.Data[12].ConcatenateInt(report.Data[13]);
-            return new Version(Major, Minor);
+            //HidReport report = _COMController.LastReport;
+            //int Major = report.Data[10];
+            //int Minor = report.Data[12].ConcatenateInt(report.Data[13]);
+            //return new Version(Major, Minor);
+            return new Version(1, 0);
         }
 
         /// <inheritdoc/>

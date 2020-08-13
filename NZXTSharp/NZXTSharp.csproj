@@ -30,12 +30,13 @@ Add GetFirmwareVersion() to INZXTDevice interface</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="docfx.console" Version="2.43.2">
+    <PackageReference Include="docfx.console" Version="2.56.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="hidlibrary" Version="3.2.46" />
-    <PackageReference Include="System.IO.Ports" Version="4.5.0" />
+    <PackageReference Include="Hid.Net" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.6" />
+    <PackageReference Include="System.IO.Ports" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>

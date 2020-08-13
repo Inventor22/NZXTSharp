@@ -48,6 +48,11 @@ namespace NZXTSharp
         /// A KrakenX Device.
         /// </summary>
         KrakenX   = 0x170e,
+
+        /// <summary>
+        /// A Kraken X63 Device.
+        /// </summary>
+        KrakenX63 = 0x2007,
         
         // Hue Devices
         /// <summary>

@@ -27,9 +27,12 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-using HidLibrary;
+//using HidLibrary;
 
 using NZXTSharp.Exceptions;
+using Microsoft.Extensions.Logging;
+using Device.Net;
+using System.Threading.Tasks;
 
 namespace NZXTSharp.COM {
     public class USBController
@@ -39,9 +42,9 @@ namespace NZXTSharp.COM {
         private HIDDeviceID _ID;
         private int CurrProductID;
         private readonly HIDDeviceID _VendorID = HIDDeviceID.VendorID;
-        private HidReport _LastReport;
+       // private HidReport _LastReport;
         private bool _IsAttached = false;
-        private HidDevice _Device;
+        //private HidDevice _Device;
 
         /// <summary>
         /// The type of device the <see cref="USBController"/> is connected to.
@@ -61,7 +64,7 @@ namespace NZXTSharp.COM {
         /// <summary>
         /// The last <see cref="HidReport"/> received from the connected <see cref="HidDevice"/>.
         /// </summary>
-        public HidReport LastReport { get => _LastReport; }
+       // public HidReport LastReport { get => _LastReport; }
 
         /// <summary>
         /// Whether or not the <see cref="USBController"/> is currently connected to its <see cref="HidDevice"/>.
@@ -82,43 +85,60 @@ namespace NZXTSharp.COM {
         /// <summary>
         /// Initializes the connection to a <see cref="HidDevice"/>.
         /// </summary>
-        public void Initialize()
+        public async Task Initialize()
         {
-            HidDevice _device = HidDevices.Enumerate((int)_VendorID, (int)_ID).FirstOrDefault();
-            _Device = _device;
-            _Device.OpenDevice();
+            //Define the types of devices to search for. This particular device can be connected to via USB, or Hid
+            var deviceDefinitions = new List<FilterDeviceDefinition>
+            {
+                new FilterDeviceDefinition{ DeviceType= DeviceType.Hid, VendorId= (uint) _VendorID, ProductId= (uint) _ID, Label="Kraken X63" }
+            };
 
-            _Device.Inserted += DeviceAttachedHandler;
-            _Device.Removed += DeviceRemovedHandler;
+            //Get the first available device and connect to it
+            var devices = await DeviceManager.Current.GetDevicesAsync(deviceDefinitions);
+            var krakenX63 = devices.FirstOrDefault();
+            await krakenX63.InitializeAsync();
 
-            _Device.ReadReport(OnReport);
+            Console.WriteLine($"Kraken X63 Device Id: {krakenX63.DeviceId}");
+
+            //HidDevice _device = HidDevices.Enumerate((int)_VendorID, (int)_ID).FirstOrDefault();
+            //_Device = _device;
+            //_Device.OpenDevice();
+
+            //_Device.Inserted += DeviceAttachedHandler;
+            //_Device.Removed += DeviceRemovedHandler;
+
+            //_Device.ReadReport()
+
+            //_Device.ReadReport(OnReport);
         }
 
         public void SimulWrite(byte[][] Buffer)
         {
             foreach (byte[] command in Buffer)
             {
-                _Device.Write(command);
+               // _Device.Write(command);
             }
 
         }
+
+
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="Report"></param>
-        internal void OnReport(HidReport Report)
-        {
-            this._LastReport = Report;
-            _Device.ReadReport(OnReport);
-        }
+        //internal void OnReport(HidReport Report)
+        //{
+        //    //this._LastReport = Report;
+        //    //_Device.ReadReport(OnReport);
+        //}
 
         /// <summary>
         /// Disposes of the current <see cref="USBController"/> instance.
         /// </summary>
         public void Dispose()
         {
-            _Device.CloseDevice();
+         //   _Device.CloseDevice();
         }
 
         /// <summary>
@@ -127,7 +147,7 @@ namespace NZXTSharp.COM {
         /// <param name="Buffer"></param>
         public void Write(byte[] Buffer)
         {
-            _Device.WriteAsync(Buffer);
+           // _Device.WriteAsync(Buffer);
         }
 
         /// <summary>
@@ -171,6 +191,9 @@ namespace NZXTSharp.COM {
                     break;
                 case NZXTDeviceType.KrakenX62:
                     this._ID = HIDDeviceID.KrakenX;
+                    break;
+                case NZXTDeviceType.KrakenX63:
+                    this._ID = HIDDeviceID.KrakenX63;
                     break;
                 case NZXTDeviceType.KrakenX72:
                     this._ID = HIDDeviceID.KrakenX;
